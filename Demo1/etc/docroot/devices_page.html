@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <head>
+        <style>
+            ul {
+                border: solid grey;
+                border-radius: 5px;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                width: 25%;
+                background-color: #ccc;
+                position: fixed;
+                height: 100%;
+                overflow: auto;
+            }
+
+            li a {
+              display: block;
+              color: #000;
+              padding: 8px 16px;
+              text-decoration: none;
+            }
+
+            li a.active {
+              background-color: #0066FF;
+              color: white;
+            }
+
+            li a:hover:not(.active) {
+              background-color: #555;
+              color: white;
+            }
+            
+            .container {
+                text-align: left;
+                border: solid grey;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                margin-left:26%;
+                padding:1px 16px;
+            }
+            
+            .container form{
+                text-align: left;
+            }
+            
+            .title{
+                text-align: left;
+                font-size: 30px;
+            }
+            
+            .add_new{
+                text-align: left;
+                font-size: 20px;
+            }
+            
+            .container  .usersdata{
+                text-align: left;
+                font-size: 32px;
+            }
+            
+            .container  table{
+                margin-top: 5px;
+                text-align: left;
+                font-size: 20px;
+            }
+            
+            .container  table tr th{
+                text-align: left;
+                font-size: 20px;
+            }
+            
+            .add_new_div{
+                border: solid grey;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                margin-left:26%;
+                padding:1px 16px;
+            }
+            
+            .user_title{
+                margin-bottom: 5px;
+                border: solid grey;
+                border-radius: 5px;
+                margin-left:26%;
+                padding:1px 16px;
+            }
+            
+            body{
+                background: #ccc;
+            }
+            
+            table {
+              font-family: arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+            }
+
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
+            
+            button{
+                width: 10%;
+                background-color: #0066FF;
+                color: white;
+                padding: 7px 10px;
+                margin: 4px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 20px;
+            }
+            
+            button:hover{
+                background-color: #0044BB;
+                color: white;
+            }
+            
+            input{
+                width: 100%;
+                font-size: 20px;
+            }
+            
+            .button_d{
+                display: inline;
+                margin-left: 80%;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    </head>
+    <body>
+        <ul class="navi">
+            <li><a class="active" href="/index.html">首頁</a></li>
+            <li><a href="/devices_page.html">Devices</a></li>
+            <li><a href="/users.html">Users</a></li>
+            <li><a href="/settings.html">Settings</a></li>
+            <li><a id='logout'>Log out</a></li>
+        </ul>
+        <div class="user_title">
+            <h1>Devices</h1>
+        </div>
+        <div class="container" style="text-align: left">
+            <form method="post" style="text-align: left">
+                <table>
+                    <tr>
+                        <th>
+                            描述:
+                        </th>
+                        <th>
+                            裝置名稱:
+                        </th>
+                    </tr>
+                </table>
+                <span class="button_d">
+                    <button name="devices" value="write" type="submit">Save</button>
+                    <button name="devices" value="reload" type="submit">Reload</button>
+                </span>
+            </form>
+        </div>
+        <script>
+            $('#logout').click(function(){
+                var r = confirm("Do you sure to log out")
+                var url = 'http://localhost:8080/login.html';
+                if(r){
+                    window.location.href = "/login.html";
+                }
+            })
+        </script>
+    </body>
+</html>

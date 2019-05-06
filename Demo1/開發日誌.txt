@@ -1,0 +1,11 @@
+2019年5月3日 上午 09:08:17
+
+Table的文字並不能被抓出來用，所以先用Input來用。
+
+Button如果要用來發送Post命令的話，需要借用Form的方式，無法單只用Button -> 已解決
+{
+    先在head裡面放入：
+        <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    利用JQuery的話，可以使用$.post(url, {data}, function(){})，function可以不需要
+}
+

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>FAMAX查詢頁面</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <style>
+        button {
+            background-color: white;
+            border: solid;
+            border-width: 2px;
+            border-color: cadetblue;
+            color: black;
+            padding: 6px 6px;
+            text-align: left;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            border-radius: 20px;
+            transition-duration: 0.4s;
+            font-family: Monospace;
+        }
+        button:hover{
+            background-color: cadetblue;
+            color: white;
+        }
+        }
+    </style>
+</head>
+<body style="width: 100%; background-color: rgba(0, 0, 0, 0.5)">
+    <div class="clearfix">
+    <div class="outside">
+        <div class="inside">
+            請輸入欲查詢之關鍵字<br>
+            <input id = "keyword">
+            <button id = "readjs">ReadJs</button>
+        </div>
+        <div class="inside">
+            <table>
+                <tr>
+                    <td>時間:</td>
+                    <td ><input id = "timein"></td>
+                </tr>
+                <tr>
+                    <td>編輯者:</td>
+                    <td ><input id = "editorin"></td>
+                </tr>
+                <tr>
+                    <td>關鍵字:</td>
+                    <td ><input id = "keywordin"></td>
+                </tr>
+                <tr>
+                    <td>網址：</td>
+                    <td ><input id = "URLin"></td>
+                </tr>
+            </table>
+            <button id = "writejs">write to spreadsheet</button>
+        </div>
+        <div class="inside">
+            請輸入欲刪除的列
+            <input id = "deleteindex"><br>
+            <button id = "deleteb">Delete Row</button>
+        </div>
+        <div class="inside">
+            <table>
+                <tr>
+                    <td>請輸入想要新增的資料標題:</td>
+                    <td ><input id="title"></td>
+                </tr>
+                <tr>
+                    <td>請輸入想要新增的資料內容:</td>
+                    <td ><input id="content"></td>
+                </tr>
+            </table>
+            <button onclick="authenticate().then(loadClient)" style = "margin-top: 10px">authorize and load</button>
+            <button onclick="execute()">execute</button>
+            <input id="post_id" style="margin-top: 15px">
+            <button onclick="deletepost()">delete post</button>
+        </div>
+    </div>
+        <div class="outside_1">
+            <iframe name="resultshow" height=450 width="100%" x=200px style="margin-top: 20px"></iframe>
+        </div>
+    <div id="show" class="outside_1">
+        <div class="inside">
+        </div>
+    </div>
+    </div>
+    <script>
+        $('#readjs').click(function(){
+            var rowcnt = 1;
+            var $show = $('#show');
+            var $result = $('#result');
+            var a = {
+                sheetUrl : 'https://docs.google.com/spreadsheets/d/1aegnFkjlCa6KSEKLELHjW0gDRIyyAFEwljLZqQWEfyE/edit#gid=965658582',
+                sheetTag : '工作表2',
+                row: 2,
+                col: 1,
+                endRow : 50,
+                endCol : 60,
+                readwrite : 0
+            };
+            if(a.readwrite == 0){
+                $.get('https://script.google.com/macros/s/AKfycbzXNyXaQ_6KwyyndYNFZN8fxENUJwwtvHdHVqgqIPwZRW9kULeJ/exec',a, function(data){
+                    $show.empty();
+                    $("#origin").empty();
+                    var d = data.split(',');  //把傳出來的字串分割成陣列
+                    var arr = [];
+                    var keyword = document.getElementById("keyword").value;
+                    for(var i=0; i<d.length-4; i=i+4){
+                        var text = "NO." + rowcnt + "<br>";
+                        text += "時間:";
+                        text += d[i] + "</br>";
+                        text += "上傳者:";
+                        text += d[i+1] + "</br>";
+                        text += "關鍵字:";
+                        text += d[i+2] + "</br>";
+                        text += "網址:";
+                        text += "<a href=\"" + d[i+3] + "\"target=\"resultshow\">" + d[i+3] + "</a>";
+                        arr[i] = text;
+                        rowcnt++;
+                        console.log(d.length);
+                        if(text!=null){
+                            if(text.includes(keyword))
+                                $show.append(text+"</br>");
+                        }
+                    }
+                });
+            }
+        });
+        $('#writejs').click(function(){
+            var time = document.getElementById("timein").value;
+            var editor = document.getElementById("editorin").value;
+            var keyword = document.getElementById("keywordin").value;
+            var Url = document.getElementById("URLin").value;
+            var a = {
+                sheetUrl : 'https://docs.google.com/spreadsheets/d/1aegnFkjlCa6KSEKLELHjW0gDRIyyAFEwljLZqQWEfyE/edit#gid=965658582',
+                sheetTag : '工作表2',
+                readwrite : 1,
+                timein: 0,
+                editorin: 0,
+                keywordin: 0,
+                URLin: 0
+            };
+            a.timein = time;
+            a.editorin = editor;
+            a.keywordin = keyword;
+            a.URLin = Url;
+            if(a.timein ==null || a.editorin == null || a.keywordin == null || a.URLin == null){
+                alert("請完整輸入資料");
+            }
+            else if(a.readwrite == 1){
+                $.get('https://script.google.com/macros/s/AKfycbzXNyXaQ_6KwyyndYNFZN8fxENUJwwtvHdHVqgqIPwZRW9kULeJ/exec',a, function(){
+                    });
+                alert("資料已送出");
+            }   
+        });
+        $('#deleteb').click(function(){
+            var index = document.getElementById("deleteindex").value;
+            index++;
+            var a = {
+                sheetUrl : 'https://docs.google.com/spreadsheets/d/1aegnFkjlCa6KSEKLELHjW0gDRIyyAFEwljLZqQWEfyE/edit#gid=965658582',
+                sheetTag : '工作表2',
+                row: index,
+                endRow : 50,
+                endCol : 60,
+                col: 1,
+                readwrite : 2
+            };
+            $.get('https://script.google.com/macros/s/AKfycbzXNyXaQ_6KwyyndYNFZN8fxENUJwwtvHdHVqgqIPwZRW9kULeJ/exec',a, function(){
+                    });
+            alert(a.row);
+        });
+    </script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        /**
+        * Sample JavaScript code for blogger.posts.insert
+        * See instructions for running APIs Explorer code samples locally:
+        * https://developers.google.com/explorer-help/guides/code_samples#javascript
+        */
+        function authenticate() {
+            return gapi.auth2.getAuthInstance()
+                .signIn({scope: "https://www.googleapis.com/auth/blogger"})
+                .then(function() { console.log("Sign-in successful"); },
+                      function(err) { console.error("Error signing in", err); });
+        }
+        function loadClient() {
+            return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/blogger/v3/rest")
+                .then(function() { console.log("GAPI client loaded for API"); },
+                      function(err) { console.error("Error loading GAPI client for API", err); });
+        }
+        // Make sure the client is loaded and sign-in is complete before calling this method.
+        function execute() {
+            var title = document.getElementById('title').value;
+            var content = document.getElementById('content').value;
+            return gapi.client.blogger.posts.insert({   // 使用 insert 指令去新增blog
+                "blogId": "3187491071585854139",
+                "resource": {
+                    "title": title,
+                    "content": content
+                }
+            })
+                .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);  // 回復的response是JSON格式
+                var time = response.result.updated;
+                var editor = response.result.author.displayName;
+                var keyword = response.result.title;
+                var Url = response.result.url;
+                var a = {
+                    sheetUrl : 'https://docs.google.com/spreadsheets/d/1aegnFkjlCa6KSEKLELHjW0gDRIyyAFEwljLZqQWEfyE/edit#gid=965658582',
+                    sheetTag : '工作表2',
+                    readwrite : 1,
+                    timein: 0,
+                    editorin: 0,
+                    keywordin: 0,
+                    URLin: 0
+                };
+                a.timein = time;
+                a.editorin = editor;
+                a.keywordin = keyword;
+                a.URLin = Url;
+                if(a.timein ==null || a.editorin == null || a.keywordin == null || a.URLin == null){
+                    alert("請完整輸入資料");
+                }
+                else if(a.readwrite == 1){
+                    $.get('https://script.google.com/macros/s/AKfycbzXNyXaQ_6KwyyndYNFZN8fxENUJwwtvHdHVqgqIPwZRW9kULeJ/exec',a, function(){
+                    });
+                    alert("資料已送出");
+                }
+            },
+                      function(err) { console.error("Execute error", err); });
+        }
+        gapi.load("client:auth2", function() {
+            gapi.auth2.init({client_id: "877906951688-dluq9fdhsgipdkassao8hlahu5ue3o36.apps.googleusercontent.com"}); //填入自己的client ID必須要是OAuth2.0
+        });
+        function deletepost(){
+            var post_id = document.getElementById('post_id');
+            return gapi.client.blogger.posts.delete({
+                "blogId": "3187491071585854139",
+                "postId": document.getElementById('post_id').value
+            }).then(function(response){
+                console.log("response");
+                console.log(post_id);
+                alert("post deleted");
+            },
+                    function(err){console.error("Execute error", err);
+                                  console.error(document.getElementById('post_id').value);
+                    });
+}
+    </script>
+    </body>
+</html>

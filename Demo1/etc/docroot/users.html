@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            ul {
+                border: solid grey;
+                border-radius: 5px;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                width: 25%;
+                background-color: #ccc;
+                position: fixed;
+                height: 100%;
+                overflow: auto;
+            }
+
+            li a {
+              display: block;
+              color: #000;
+              padding: 8px 16px;
+              text-decoration: none;
+            }
+
+            li a.active {
+              background-color: #0066FF;
+              color: white;
+            }
+
+            li a:hover:not(.active) {
+              background-color: #555;
+              color: white;
+            }
+            .container {
+                text-align: center;
+                border: solid grey;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                margin-left:26%;
+                padding:1px 16px;
+            }
+            .container table {
+                margin: 0 auto;
+                /* You can also uncomment this and remove the align="center" attribute    
+                    
+                */
+            }
+            .container form{
+                text-align: left;
+            }
+            .title{
+                text-align: left;
+                font-size: 30px;
+            }
+            .add_new{
+                text-align: left;
+                font-size: 20px;
+            }
+            
+            .container  .usersdata{
+                text-align: center;
+                font-size: 32px;
+            }
+            
+            .container  table{
+                text-align: center;
+                font-size: 20px;
+            }
+            
+            .container  table tr th{
+                text-align: left;
+                font-size: 20px;
+            }
+            
+            .add_new_div{
+                border: solid grey;
+                margin-bottom: 5px;
+                border-radius: 5px;
+                margin-left:26%;
+                padding:1px 16px;
+            }
+            
+            .user_title{
+                margin-bottom: 5px;
+                border: solid grey;
+                border-radius: 5px;
+                margin-left:26%;
+                padding:1px 16px;
+            }
+            
+            .userbutton{
+                width: 12%;
+                background-color: #0066FF;
+                color: white;
+                padding: 10px 14px;
+                margin: 4px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .userbutton:hover {
+                background-color: #0044BB;
+            }
+            
+            body{
+                background: #ccc;
+            }
+            
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 4px;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+            
+            input{
+                width: 100%;
+                font-size: 20px;
+            }
+            
+            span{
+                margin-left: 75%;
+                display: inline;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    </head>
+    <body>
+        <ul class="navi">
+            <li><a class="active" href="/index.html">首頁</a></li>
+            <li><a href="/devices_page.html">Devices</a></li>
+            <li><a href="/users.html">Users</a></li>
+            <li><a href="/settings.html">Settings</a></li>
+            <li><a id='logout'>Log out</a></li>
+        </ul>
+        <div class="user_title">
+            <h1>Users</h1>
+        </div>
+        <div class="container">
+            <h2 class="usersdata">All users's data</h2>
+            <table>
+                <tr>
+                    <th>
+                        Account
+                    </th>
+                    <th>
+                        Password
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div class="add_new_div">
+            <h2 class="title">Add new User</h2>
+            <form id='add_new_f' method="post">
+                <table class="add_new">
+                    <tr>
+                        <td>
+                            <label>Account:</label>
+                        </td>
+                        <td>
+                            <input id='name_in' name="account">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Password:
+                        </td>
+                        <td>
+                            <input id='key_in' name="password">
+                        </td>
+                    </tr>
+                </table>
+                <span>
+                    <button class="userbutton" id='add_user_b' name="users" value="write" type="button">Save</button>
+                    <button class="userbutton" name="users" value="reload" type="submit">Reload</button>
+                </span>
+            </form>
+        </div>
+        <script>
+//            function post_q(){
+//                var url = document.location.href;
+//                $.post(url,{settings:'write',key1:'3456'});
+//                console.log(url);
+//            }
+            $('.userbutton').click(function(){
+                var url = document.location.href;
+                console.log(url);
+//                $.post(url,{settings:'write',key1:'3456'}, function(){
+//                });
+            })
+            $('#logout').click(function(){
+                var r = confirm("Do you sure to log out")
+                var url = 'http://localhost:8080/login.html';
+                if(r){
+                    window.location.href = "/login.html";
+                }
+            })
+            $('#add_user_b').click(function(){
+                var form = document.getElementById('add_new_f')
+                var name = document.getElementById('name_in')
+                var key = document.getElementById('key_in')
+                if(name.value != '' && key.value != ''){
+                    var node = document.createElement('input');
+                    node.setAttribute('type', 'hidden');
+                    node.setAttribute('name', 'users');
+                    node.setAttribute('value', 'write');
+                    form.appendChild(node);
+                    form.submit();
+                    alert("Send" + name.value + key.value)
+                }
+                else{
+                    alert('Account and Password cannot be empty');
+                }
+            })
+        </script>
+    </body>
+</html>
